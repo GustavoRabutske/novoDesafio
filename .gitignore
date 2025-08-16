@@ -1,0 +1,19 @@
+# Ambiente Virtual
+venv/
+.venv/
+env/
+.env/
+
+# Arquivo de Variáveis de Ambiente
+.env
+
+# Banco de Dados
+*.db
+
+# Caches e arquivos compilados
+__pycache__/
+*.pyc
+
+# Configuração de IDEs
+.vscode/
+.idea/

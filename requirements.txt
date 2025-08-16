@@ -1,0 +1,7 @@
+streamlit
+pandas
+matplotlib
+openpyxl
+tiktoken
+python-dotenv
+groq
