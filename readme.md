@@ -46,18 +46,18 @@ Para que a aplicação funcionasse de forma fluida e inteligente, optei por um f
 **Pré-requisitos:**
 -   Python 3.8+
 
-**Passos:**
+**Siga os passos no terminal do projeto:**
 
-1.  **Instale todas as dependências de uma só vez:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-2.  **Opcional, mas recomendado: Crie e ative um ambiente virtual:**
+1.  **Opcional, mas recomendado: Crie e ative um ambiente virtual:**
     ```bash
     python -m venv venv
     # No Windows: .\\venv\\Scripts\\activate
     # No macOS/Linux: source venv/bin/activate
+    ```
+
+2.  **Instale todas as dependências de uma só vez:**
+    ```bash
+    pip install -r requirements.txt
     ```
 
 3.  **Execute a aplicação:**
