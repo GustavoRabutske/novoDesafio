@@ -38,6 +38,9 @@ Para que a aplicação funcionasse de forma fluida e inteligente, optei por um f
 -   **Manipulação de Dados:** Pandas
 -   **Visualização de Dados:** Matplotlib
 
+
+
+
 ## ⚙️ Como Executar o Projeto
 
 **Pré-requisitos:**
@@ -62,19 +65,22 @@ Para que a aplicação funcionasse de forma fluida e inteligente, optei por um f
     streamlit run app.py
     ```
 
+
+
+
 ## 📝 Exemplos de Perguntas que Testei
 
--   `Liste os 5 estados com maior número de clientes que compraram via app em maio.`
+-   `Liste os 5 estados com maior número de clientes.`
 -   `Quantos clientes interagiram com campanhas de WhatsApp em 2024?`
 -   `Qual o valor total de vendas por canal de compra, ordenado do maior para o menor?`
--   `Qual o número de reclamações não resolvidas por canal? Gere um gráfico de pizza.`
+-   `Qual o número de reclamações não resolvidas por canal?`
 -   `Liste os 10 clientes que mais gastaram no total.`
 
 ## 💡 Insights que Descobri com a Ferramenta
 
 Ao usar a aplicação, pude extrair alguns insights interessantes que mostram o potencial da ferramenta para uma estratégia de Growth:
 
-1.  **Canal de Vendas:** Ao perguntar sobre o total de vendas por canal, é possível notar que a maioria das compras acontece no 'site' com 331 vendas, seguido pelo 'app' com 323 e pela 'loja física' com 322.
+1.  **Canal de Vendas:** Ao perguntar "Qual o total de quantidade de vendas realizadas por canal", é possível notar que a maioria das compras acontece no 'site' com 331 vendas, seguido pelo 'app' com 323 e pela 'loja física' com 322.
 2.  **Eficácia de Campanhas:** A pergunta `Quantos clientes interagiram com a campanha 'Black Friday'?` revela rapidamente o engajamento de uma ação específica, permitindo avaliar o ROI de campanhas de marketing quase em tempo real.
 3.  **Pontos de Atrito no Suporte:** Ao visualizar as `reclamações não resolvidas por canal`, a equipe pode identificar qual canal de suporte (email, telefone, chat) está com mais problemas e precisa de mais atenção ou recursos.
 4.  **Perfil do Cliente de Alto Valor:** A simples pergunta `Liste os 10 clientes que mais gastaram` pode ser o ponto de partida para a criação de um programa de fidelidade ou para ações de marketing direcionadas a esse público específico.

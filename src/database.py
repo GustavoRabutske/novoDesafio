@@ -56,6 +56,12 @@ def execute_query(query: str):
     """
     Executa uma query SQL no banco de dados e retorna o resultado como um DataFrame.
     """
+    # --- CAMADA DE SEGURANÇA ---
+    # Antes de executar qualquer coisa, verificamos se a query é segura.
+    # Isso impede que a IA, mesmo que instruída pelo usuário, execute
+    # comandos perigosos como DELETE, UPDATE, DROP, etc.
+    if not query.strip().upper().startswith("SELECT"):
+        raise ValueError("Operação não permitida. Este sistema é apenas para consulta de dados.")
     try:
         conn = get_db_connection()
         if not conn:
