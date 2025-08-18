@@ -12,7 +12,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Inicialização e Estado da Sessão ---
 client = initialize_groq_client()
 
 if 'current_query' not in st.session_state:
@@ -42,7 +41,7 @@ with st.sidebar:
     - `Liste os 5 estados com maior número de clientes.`
     - `Qual o valor total de compras por categoria de produto?`
     - `Quantas reclamações não resolvidas existem por canal de suporte?`
-    - `Mostre o número de clientes que interagiram com a campanha 'Black Friday Antecipada'.`
+    - `Mostre o número de clientes que interagiram com a campanha 'Black Friday'.`
     """)
 
     st.divider()
@@ -54,11 +53,11 @@ with st.sidebar:
     st.markdown(footer_html, unsafe_allow_html=True)
 
 
-# --- Interface Principal ---
+#Interface Principal
 st.title("🔍 Análise de dados com agente de IA (Groq)")
 st.markdown("Faça uma pergunta sobre os dados de clientes, compras, suporte ou marketing.")
 
-# --- DETALHES DA APLICAÇÃO ---
+#DETALHES DA APLICAÇÃO 
 with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"):
     st.markdown("""
     Esta aplicação utiliza uma arquitetura de **agentes de IA** para transformar perguntas em linguagem natural em insights de dados. O processo funciona em três etapas principais:
@@ -78,7 +77,7 @@ with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"
     """)
 
 
-# Área de input da pergunta do usuário
+#area de input da pergunta do usuario
 user_prompt = st.text_area(
     "Sua pergunta:",
     placeholder="Ex: Qual o número de reclamações não resolvidas por canal?",

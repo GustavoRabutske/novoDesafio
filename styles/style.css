@@ -17,18 +17,17 @@
     --text-color: #FAFAFA;
 }
 
-/* Aplica as variáveis globalmente */
 body {
     background-color: var(--background-color);
     color: var(--text-color);
 }
 
-/* Elementos da UI do Streamlit com as nossas variáveis */
+
 .stApp {
     background-color: var(--background-color);
 }
 
-.st-emotion-cache-16txtl3 { /* Cor de fundo da sidebar */
+.st-emotion-cache-16txtl3 { 
     background-color: var(--secondary-background-color);
 }
 
@@ -46,7 +45,7 @@ h1, h2, h3 {
     color: var(--primary-color);
 }
 
-/* Corrigindo a cor de fundo do expander */
+
 .st-emotion-cache-a8lh1u {
     background-color: var(--secondary-background-color);
 }

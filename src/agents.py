@@ -16,6 +16,13 @@ def initialize_groq_client():
         return None
     return Groq(api_key=api_key)
 
+
+# --- AGENTE 1: O Tradutor (Text-to-SQL) ---
+# Aqui começa a primeira parte. Esta função age como o nosso primeiro
+# agente, um especialista em SQL. A missão dele é bem específica: pegar a
+# pergunta que o usuário fez em português e o "mapa" do banco de dados (o schema)
+# e traduzir tudo isso para uma consulta SQL que o banco de dados consiga entender.
+# É basicamente um tradutor de linguagem natural para SQL.
 def create_sql_query_agent(client: Groq, user_prompt: str, schema: str) -> str:
     """Agente que gera uma query SQL a partir da solicitação do usuário."""
     system_prompt = f"""
@@ -55,7 +62,14 @@ SELECT estado, COUNT(id) as total_clientes FROM clientes GROUP BY estado ORDER B
         raise RuntimeError(f"Erro na API da Groq (SQL Agent): {e}")
     except Exception as e:
         raise RuntimeError(f"Erro inesperado no agente de SQL: {e}")
+    
 
+# --- AGENTE 3: O Analista e Comunicador ---
+# Chegamos ao terceiro e último agente, o "analista". A função dele é pegar os
+# dados brutos que o Agente 2 trouxe (o DataFrame) e a pergunta original do
+# usuário para dar contexto. A partir daí, ele interpreta os resultados e gera
+# aquele resumo amigável em texto que aparece na tela, transformando os dados
+# em uma resposta clara e útil.
 def format_response_agent(client: Groq, user_prompt: str, query_result: pd.DataFrame) -> str:
     """Agente que gera uma resposta amigável a partir dos resultados da query."""
     system_prompt = """

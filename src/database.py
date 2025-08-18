@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import os
 
-# O caminho agora aponta para o arquivo de banco de dados fornecido
+# Banco de dados usado para análise
 DB_PATH = 'clientes_completo.db'
 
 def get_db_connection():
@@ -46,6 +46,11 @@ def get_schema_representation():
     conn.close()
     return schema_str
 
+# --- AGENTE 2: O Executor de Dados ---
+# Este é o segundo agente, o consultor de dados. Na prática, é uma função
+# Python que faz o trabalho de se conectar no banco de dados. Ele recebe
+# o SQL que o Agente 1 gerou, vai até o banco, executa a consulta e traz de
+# volta os resultados. O retorno é um DataFrame do Pandas
 @st.cache_data(ttl=3600)
 def execute_query(query: str):
     """
