@@ -4,7 +4,6 @@ from src.database import get_schema_representation, execute_query
 from src.agents import initialize_groq_client, create_sql_query_agent, format_response_agent
 from src.chart_generator import generate_plot
 
-# --- Configuração da Página ---
 st.set_page_config(
     page_title="Análise com IA | Desafio Técnico",
     page_icon="🤖",
@@ -25,9 +24,8 @@ if 'generated_sql' not in st.session_state:
 if 'error_message' not in st.session_state:
     st.session_state.error_message = ""
 
-# --- Interface do Usuário (Sidebar) ---
 with st.sidebar:
-    st.title("🤖 Assistente de Análise")
+    st.title("Assistente de Análise")
     st.markdown("""
     Este é um protótipo para o desafio técnico de estágio.
     **Como usar:**
@@ -53,11 +51,11 @@ with st.sidebar:
     st.markdown(footer_html, unsafe_allow_html=True)
 
 
-#Interface Principal
+# Interface principal
 st.title("🔍 Análise de dados com agente de IA (Groq)")
 st.markdown("Faça uma pergunta sobre os dados de clientes, compras, suporte ou marketing.")
 
-#DETALHES DA APLICAÇÃO 
+# DETALHES DA APLICAÇÃO 
 with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"):
     st.markdown("""
     Esta aplicação utiliza uma arquitetura de **agentes de IA** para transformar perguntas em linguagem natural em insights de dados. O processo funciona em três etapas principais:
@@ -77,7 +75,7 @@ with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"
     """)
 
 
-#area de input da pergunta do usuario
+# Área de input da pergunta do usuario
 user_prompt = st.text_area(
     "Sua pergunta:",
     placeholder="Ex: Qual o número de reclamações não resolvidas por canal?",
@@ -88,7 +86,7 @@ user_prompt = st.text_area(
 analyze_button = st.button("Analisar", type="primary", use_container_width=True)
 
 
-# --- Lógica de Orquestração dos Agentes ---
+#  Lógica de orquestração dos agentes
 if analyze_button and user_prompt:
     if not client:
         st.error("Cliente da API não inicializado. Verifique suas credenciais no arquivo .env.")
@@ -122,7 +120,7 @@ if analyze_button and user_prompt:
             st.session_state.error_message = f"Ocorreu um erro inesperado no fluxo: {e}"
 
 
-# --- Exibição dos Resultados ---
+# Exibição dos resultados
 if st.session_state.error_message:
     st.error(f"**Ocorreu um erro:**\n\n{st.session_state.error_message}")
     if st.session_state.generated_sql:
@@ -151,7 +149,7 @@ if st.session_state.analysis_text:
         st.code(st.session_state.generated_sql, language="sql")
 
 
-# --- Seção de Geração de Gráficos ---
+# Seção de geração de gráficos 
 if st.session_state.query_result_df is not None and not st.session_state.query_result_df.empty:
     st.divider()
     st.header("📊 Gerador de Gráficos")
