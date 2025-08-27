@@ -11,7 +11,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-client = initialize_groq_client()
+# A função agora inicializa o cliente LangChain (ChatGroq)
+llm_client = initialize_groq_client()
 
 if 'current_query' not in st.session_state:
     st.session_state.current_query = ""
@@ -25,13 +26,19 @@ if 'error_message' not in st.session_state:
     st.session_state.error_message = ""
 
 with st.sidebar:
-    st.title("Assistente de Análise")
+    # Título mais direto e com um ícone para chamar a atenção
+    st.title("🤖 Análise com LangChain")
+    
+    # Descrição que destaca a tecnologia usada de forma mais clara
     st.markdown("""
-    Este é um protótipo para o desafio técnico de estágio.
-    **Como usar:**
+    Esta é a versão aprimorada do protótipo para o desafio técnico, agora **potencializado pelo framework de agentes LangChain**.
+    """)
+
+    st.subheader("Como usar:")
+    st.markdown("""
     1.  Faça uma pergunta em linguagem natural sobre os dados.
     2.  Clique em **"Analisar"**.
-    3.  A IA irá gerar e executar uma consulta SQL para encontrar a resposta.
+    3.  A IA, orquestrada pelo LangChain, irá gerar e executar uma consulta SQL para encontrar a resposta.
     """)
 
     st.subheader("Exemplos de Perguntas:")
@@ -50,28 +57,27 @@ with st.sidebar:
     """
     st.markdown(footer_html, unsafe_allow_html=True)
 
-
 # Interface principal
-st.title("🔍 Análise de dados com agente de IA (Groq)")
+st.title("🔍 Análise de dados com agente de IA (Groq + LangChain)")
 st.markdown("Faça uma pergunta sobre os dados de clientes, compras, suporte ou marketing.")
 
 # DETALHES DA APLICAÇÃO 
 with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"):
     st.markdown("""
-    Esta aplicação utiliza uma arquitetura de **agentes de IA** para transformar perguntas em linguagem natural em insights de dados. O processo funciona em três etapas principais:
+    Esta aplicação utiliza uma arquitetura de **agentes de IA orquestrada com LangChain** para transformar perguntas em linguagem natural em insights. O processo funciona em três etapas:
 
     1.  **Agente 1: O Tradutor (Text-to-SQL)**
-        -   Quando você faz uma pergunta, este agente a recebe junto com um "mapa" do banco de dados (o schema).
-        -   Sua única tarefa é traduzir sua pergunta em uma consulta SQL precisa.
+        -   Quando você faz uma pergunta, uma **cadeia (chain) do LangChain** a recebe junto com o schema do banco de dados.
+        -   Esta chain utiliza o modelo de linguagem da Groq para traduzir sua pergunta em uma consulta SQL precisa.
 
     2.  **Agente 2: O Consultor (Executor SQL)**
-        -   Este agente (uma função em Python) pega a consulta SQL gerada, conecta-se ao banco de dados `clientes_completo.db` e busca os dados exatos.
+        -   Este agente (uma função em Python) pega a consulta SQL gerada, conecta-se ao banco de dados e busca os dados.
 
     3.  **Agente 3: O Analista (Formatador da Resposta)**
-        -   Ele recebe os dados brutos do Agente 2 e sua pergunta original.
-        -   Sua função é analisar a tabela de resultados e escrever o resumo em texto claro e direto que você vê na tela.
+        -   Uma segunda **cadeia do LangChain** recebe os dados brutos e sua pergunta original.
+        -   Sua função é analisar os resultados e escrever o resumo em texto claro e direto que você vê na tela.
 
-    Este fluxo garante que cada etapa do processo seja tratada por um especialista, resultando em respostas mais rápidas e precisas.
+    O uso do LangChain organiza o fluxo, tornando cada etapa mais clara, modular e fácil de manter.
     """)
 
 
@@ -86,9 +92,9 @@ user_prompt = st.text_area(
 analyze_button = st.button("Analisar", type="primary", use_container_width=True)
 
 
-#  Lógica de orquestração dos agentes
+# Lógica de orquestração dos agentes
 if analyze_button and user_prompt:
-    if not client:
+    if not llm_client:
         st.error("Cliente da API não inicializado. Verifique suas credenciais no arquivo .env.")
     else:
         # Limpa o estado anterior
@@ -100,19 +106,23 @@ if analyze_button and user_prompt:
         try:
             with st.spinner("Agente 1: Interpretando sua pergunta e gerando a consulta SQL..."):
                 schema = get_schema_representation()
-                sql_query = create_sql_query_agent(client, user_prompt, schema)
+                # A chamada agora passa o cliente LLM do LangChain
+                sql_query = create_sql_query_agent(llm_client, user_prompt, schema)
                 st.session_state.generated_sql = sql_query
 
-            with st.spinner("Agente 2: Executando a consulta no banco de dados..."):
-                query_result_df = execute_query(sql_query)
-                st.session_state.query_result_df = query_result_df
+            if sql_query.strip().upper() == 'INVALIDO':
+                st.session_state.error_message = "Sua pergunta foi considerada inválida ou não relacionada aos dados. Por favor, tente novamente."
+            else:
+                with st.spinner("Agente 2: Executando a consulta no banco de dados..."):
+                    query_result_df = execute_query(sql_query)
+                    st.session_state.query_result_df = query_result_df
 
-            with st.spinner("Agente 3: Gerando a análise dos resultados..."):
-                if query_result_df.empty:
-                    st.session_state.analysis_text = "A consulta não retornou resultados. Tente uma pergunta diferente."
-                else:
-                    analysis_text = format_response_agent(client, user_prompt, query_result_df)
-                    st.session_state.analysis_text = analysis_text
+                with st.spinner("Agente 3: Gerando a análise dos resultados..."):
+                    if query_result_df.empty:
+                        st.session_state.analysis_text = "A consulta não retornou resultados. Tente uma pergunta diferente."
+                    else:
+                        analysis_text = format_response_agent(llm_client, user_prompt, query_result_df)
+                        st.session_state.analysis_text = analysis_text
 
         except (ValueError, RuntimeError) as e:
             st.session_state.error_message = str(e)
@@ -120,10 +130,10 @@ if analyze_button and user_prompt:
             st.session_state.error_message = f"Ocorreu um erro inesperado no fluxo: {e}"
 
 
-# Exibição dos resultados
+# Exibição dos resultados (código sem alterações)
 if st.session_state.error_message:
     st.error(f"**Ocorreu um erro:**\n\n{st.session_state.error_message}")
-    if st.session_state.generated_sql:
+    if st.session_state.generated_sql and st.session_state.generated_sql.strip().upper() != 'INVALIDO':
         st.warning("**SQL Gerado (com erro):**")
         st.code(st.session_state.generated_sql, language="sql")
 
@@ -144,12 +154,9 @@ if st.session_state.analysis_text:
         else:
             st.info("Nenhum dado para exibir.")
 
-    # Expander para detalhes técnicos
     with st.expander("Ver detalhes técnicos (Consulta SQL Gerada)"):
         st.code(st.session_state.generated_sql, language="sql")
 
-
-# Seção de geração de gráficos 
 if st.session_state.query_result_df is not None and not st.session_state.query_result_df.empty:
     st.divider()
     st.header("📊 Gerador de Gráficos")
@@ -157,7 +164,6 @@ if st.session_state.query_result_df is not None and not st.session_state.query_r
     df = st.session_state.query_result_df
     columns = df.columns.tolist()
 
-    # Tenta identificar colunas categóricas e numéricas automaticamente
     numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
     categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
 

@@ -5,3 +5,5 @@ openpyxl
 tiktoken
 python-dotenv
 groq
+langchain
+langchain_groq
