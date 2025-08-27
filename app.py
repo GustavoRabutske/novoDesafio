@@ -26,12 +26,10 @@ if 'error_message' not in st.session_state:
     st.session_state.error_message = ""
 
 with st.sidebar:
-    # Título mais direto e com um ícone para chamar a atenção
     st.title("🤖 Análise com LangChain")
     
-    # Descrição que destaca a tecnologia usada de forma mais clara
     st.markdown("""
-    Esta é a versão aprimorada do protótipo para o desafio técnico, agora **potencializado pelo framework de agentes LangChain**.
+    Esta é a versão aprimorada do protótipo para o desafio técnico, agora **usando o framework de agentes LangChain**.
     """)
 
     st.subheader("Como usar:")
@@ -77,7 +75,7 @@ with st.expander("ℹ️ Como esta aplicação funciona? (Clique para expandir)"
         -   Uma segunda **cadeia do LangChain** recebe os dados brutos e sua pergunta original.
         -   Sua função é analisar os resultados e escrever o resumo em texto claro e direto que você vê na tela.
 
-    O uso do LangChain organiza o fluxo, tornando cada etapa mais clara, modular e fácil de manter.
+    O uso do LangChain organiza o fluxo, tornando cada etapa mais clara.
     """)
 
 
@@ -130,7 +128,6 @@ if analyze_button and user_prompt:
             st.session_state.error_message = f"Ocorreu um erro inesperado no fluxo: {e}"
 
 
-# Exibição dos resultados (código sem alterações)
 if st.session_state.error_message:
     st.error(f"**Ocorreu um erro:**\n\n{st.session_state.error_message}")
     if st.session_state.generated_sql and st.session_state.generated_sql.strip().upper() != 'INVALIDO':

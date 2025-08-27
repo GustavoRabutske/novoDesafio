@@ -8,7 +8,6 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# Carregamento de variáveis de ambiente (se usar .env)
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -25,7 +24,7 @@ def initialize_groq_client():
 
 
 # --- AGENTE 1: O Tradutor (Text-to-SQL) com LangChain ---
-# A lógica foi migrada para uma "chain" do LangChain.
+# A lógica foi migrada para uma chain do LangChain.
 # A estrutura é: Template do Prompt -> Modelo de Linguagem -> Parser de Saída
 def create_sql_query_agent(llm: ChatGroq, user_prompt: str, schema: str) -> str:
     """Agente que gera uma query SQL a partir da solicitação do usuário usando LangChain."""
@@ -67,7 +66,7 @@ SELECT estado, COUNT(id) as total_clientes FROM clientes GROUP BY estado ORDER B
     # O StrOutputParser garante que a saída seja uma string simples
     output_parser = StrOutputParser()
 
-    # A "chain" conecta todos os componentes
+    # A chain conecta todos os componentes
     sql_chain = prompt_template | llm | output_parser
     
     try:
@@ -81,7 +80,7 @@ SELECT estado, COUNT(id) as total_clientes FROM clientes GROUP BY estado ORDER B
     
 
 # --- AGENTE 3: O Analista e Comunicador com LangChain ---
-# A mesma abordagem de "chain" é aplicada aqui para formatar a resposta final.
+# A mesma abordagem de chain é aplicada aqui para formatar a resposta final.
 def format_response_agent(llm: ChatGroq, user_prompt: str, query_result: pd.DataFrame) -> str:
     """Agente que gera uma resposta amigável a partir dos resultados da query usando LangChain."""
     
@@ -96,7 +95,7 @@ Você é um Analista de Dados assistente. Sua função é interpretar os resulta
     
     data_text = query_result.to_string(index=False, max_rows=10)
     
-    # O template agora recebe o contexto (pergunta e dados)
+    # O template recebe o contexto (pergunta e dados)
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", system_prompt),
         ("human", (
@@ -108,7 +107,6 @@ Você é um Analista de Dados assistente. Sua função é interpretar os resulta
     
     output_parser = StrOutputParser()
 
-    # Criamos a chain de formatação
     formatter_chain = prompt_template | llm | output_parser
     
     try:
